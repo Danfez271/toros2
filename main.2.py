@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 
-
 class Coleador:
     def __init__(self, nombre, estado, puntos_nulos=0, puntos_efectivos=0):
         self.posicion = 0
