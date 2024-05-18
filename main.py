@@ -195,8 +195,7 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                if coleador_nombre not in self.listbox_turno_actual.get(0, tk.END):
-                    self.listbox_turno_actual.insert(tk.END, coleador_nombre)
+                self.listbox_turno_actual.insert(tk.END, coleador_nombre)
 
     def add_to_turno_siguiente(self):
         if self.listbox_turno_siguiente.size() < 4:
@@ -204,8 +203,7 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                if coleador_nombre not in self.listbox_turno_siguiente.get(0, tk.END):
-                    self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
+                self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
 
     def next_turn(self):
         self.listbox_turno_actual.delete(0, tk.END)
