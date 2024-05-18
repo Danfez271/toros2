@@ -58,18 +58,18 @@ class App:
         tk.Button(self.root, text="Modificar", command=self.update_coleador).grid(row=5, column=0, columnspan=2)
         tk.Button(self.root, text="Eliminar", command=self.delete_coleador).grid(row=6, column=0, columnspan=2)
 
-        # Adding labels and listboxes for "Turno Actual" and "Turno Siguiente"
-        tk.Label(self.root, text="Turno Actual:").grid(row=7, column=0, columnspan=2)
-        self.listbox_turno_actual = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
-        self.listbox_turno_actual.grid(row=8, column=0, columnspan=2)
+        # Additions for Turno Actual and Turno Siguiente
+        tk.Label(self.root, text="Turno Actual:").grid(row=0, column=4)
+        self.listbox_turno_actual = tk.Listbox(self.root)
+        self.listbox_turno_actual.grid(row=1, column=4, rowspan=5)
 
-        tk.Label(self.root, text="Turno Siguiente:").grid(row=9, column=0, columnspan=2)
-        self.listbox_turno_siguiente = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
-        self.listbox_turno_siguiente.grid(row=10, column=0, columnspan=2)
+        tk.Label(self.root, text="Turno Siguiente:").grid(row=0, column=5)
+        self.listbox_turno_siguiente = tk.Listbox(self.root)
+        self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5)
 
-        tk.Button(self.root, text="Agregar a Turno Actual", command=self.agregar_actual).grid(row=11, column=0, columnspan=2)
-        tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.agregar_siguiente).grid(row=12, column=0, columnspan=2)
-        tk.Button(self.root, text="Siguiente Turno", command=self.siguiente_turno).grid(row=13, column=0, columnspan=2)
+        tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4)
+        tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.add_to_turno_siguiente).grid(row=6, column=5)
+        tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2)
 
     def start_drag(self, event):
         widget = event.widget
@@ -189,27 +189,25 @@ class App:
         except FileNotFoundError:
             pass
 
-    def agregar_actual(self):
-        selected_indices = self.listbox.curselection()
-        if len(self.listbox_turno_actual.get(0, tk.END)) + len(selected_indices) <= 4:
-            for i in selected_indices:
-                coleador_nombre = self.listbox.get(i)
+    def add_to_turno_actual(self):
+        if self.listbox_turno_actual.size() < 4:
+            selected_index = self.listbox.curselection()
+            if selected_index:
+                index = selected_index[0]
+                coleador_nombre = self.listbox.get(index)
                 if coleador_nombre not in self.listbox_turno_actual.get(0, tk.END):
                     self.listbox_turno_actual.insert(tk.END, coleador_nombre)
-        else:
-            messagebox.showwarning("Advertencia", "Máximo 4 coleadores en el turno actual")
 
-    def agregar_siguiente(self):
-        selected_indices = self.listbox.curselection()
-        if len(self.listbox_turno_siguiente.get(0, tk.END)) + len(selected_indices) <= 4:
-            for i in selected_indices:
-                coleador_nombre = self.listbox.get(i)
+    def add_to_turno_siguiente(self):
+        if self.listbox_turno_siguiente.size() < 4:
+            selected_index = self.listbox.curselection()
+            if selected_index:
+                index = selected_index[0]
+                coleador_nombre = self.listbox.get(index)
                 if coleador_nombre not in self.listbox_turno_siguiente.get(0, tk.END):
                     self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
-        else:
-            messagebox.showwarning("Advertencia", "Máximo 4 coleadores en el turno siguiente")
 
-    def siguiente_turno(self):
+    def next_turn(self):
         self.listbox_turno_actual.delete(0, tk.END)
         for i in range(self.listbox_turno_siguiente.size()):
             self.listbox_turno_actual.insert(tk.END, self.listbox_turno_siguiente.get(i))
