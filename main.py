@@ -48,7 +48,9 @@ class App:
             "turno_actual.txt",
             "turno_siguiente.txt",
             "coleadores1.txt",
-            "coleadores2.txt"
+            "coleadores2.txt",
+            "efectivos.txt",
+            "nulos.txt"
         ]
         for file in files:
             open(file, 'w').close()
@@ -205,11 +207,18 @@ class App:
         for coleador in sorted_coleadores[:10]:
             self.listbox_sorted.insert(tk.END, coleador.nombre)
         self.save_sorted_list()
+        self.save_efectivos_and_nulos(sorted_coleadores[:10])
 
     def save_sorted_list(self):
         with open("lista_posiciones.txt", "w") as file:
             for index in range(self.listbox_sorted.size()):
                 file.write(f"{self.listbox_sorted.get(index)}\n")
+
+    def save_efectivos_and_nulos(self, sorted_coleadores):
+        with open("efectivos.txt", "w") as file_efectivos, open("nulos.txt", "w") as file_nulos:
+            for coleador in sorted_coleadores:
+                file_efectivos.write(f"{coleador.nombre}: {coleador.puntos_efectivos}\n")
+                file_nulos.write(f"{coleador.nombre}: {coleador.puntos_nulos}\n")
 
     def save_coleadores(self):
         with open("participantes.txt", "w") as file:
