@@ -84,7 +84,7 @@ class App:
 
         tk.Label(self.root, text="Top 10").grid(row=0, column=3)
         self.listbox_sorted = tk.Listbox(self.root)
-        self.listbox_sorted.grid(row=0, column=3, rowspan=6, padx=(10, 20), pady=10, sticky="ns")
+        self.listbox_sorted.grid(row=1, column=3, rowspan=5, padx=(10, 20), pady=10, sticky="ns")
 
         # Buttons
         tk.Button(self.root, text="Agregar", command=self.add_coleador).grid(row=4, column=0, columnspan=2, pady=10)
