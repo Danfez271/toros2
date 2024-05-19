@@ -4,7 +4,7 @@ import os
 
 
 class Coleador:
-    def __init__(self, nombre, estado, puntos_nulos, puntos_efectivos):
+    def __init__(self, nombre, estado, puntos_nulos=0, puntos_efectivos=0):
         self.posicion = 0
         self.nombre = self.formatear_nombre(nombre)
         self.estado = estado
@@ -42,7 +42,14 @@ class App:
 
     def clear_files(self):
         # Clear the content of the files at the start
-        files = ["coleadores.txt", "lista_posiciones.txt", "turno_actual.txt", "turno_siguiente.txt"]
+        files = [
+            "participantes.txt",
+            "lista_posiciones.txt",
+            "turno_actual.txt",
+            "turno_siguiente.txt",
+            "coleadores1.txt",
+            "coleadores2.txt"
+        ]
         for file in files:
             open(file, 'w').close()
 
@@ -204,7 +211,7 @@ class App:
                 file.write(f"{self.listbox_sorted.get(index)}\n")
 
     def save_coleadores(self):
-        with open("coleadores.txt", "w") as file:
+        with open("participantes.txt", "w") as file:
             for coleador in self.lista_coleadores:
                 file.write(f"{coleador.nombre},{coleador.estado},{coleador.puntos_nulos},{coleador.puntos_efectivos}\n")
 
@@ -217,7 +224,7 @@ class App:
 
     def load_coleadores(self):
         try:
-            with open("coleadores.txt", "r") as file:
+            with open("participantes.txt", "r") as file:
                 for line in file:
                     nombre, estado, puntos_nulos, puntos_efectivos = line.strip().split(',')
                     coleador = Coleador(nombre, estado, puntos_nulos, puntos_efectivos)
@@ -233,9 +240,8 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                if coleador_nombre not in self.listbox_turno_actual.get(0, tk.END):
-                    self.listbox_turno_actual.insert(tk.END, coleador_nombre)
-                    self.save_turno_actual()
+                self.listbox_turno_actual.insert(tk.END, coleador_nombre)
+                self.save_turno_actual()
 
     def add_to_turno_siguiente(self):
         if self.listbox_turno_siguiente.size() < 4:
@@ -243,9 +249,8 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                if coleador_nombre not in self.listbox_turno_siguiente.get(0, tk.END):
-                    self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
-                    self.save_turno_siguiente()
+                self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
+                self.save_turno_siguiente()
 
     def next_turn(self):
         self.listbox_turno_actual.delete(0, tk.END)
