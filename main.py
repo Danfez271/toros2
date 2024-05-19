@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+import os
+
 
 class Coleador:
     def __init__(self, nombre, estado, puntos_nulos, puntos_efectivos):
@@ -15,6 +17,7 @@ class Coleador:
     def puntuacion(self):
         return self.puntos_efectivos - self.puntos_nulos
 
+
 class App:
     def __init__(self, root):
         self.root = root
@@ -22,8 +25,15 @@ class App:
 
         self.lista_coleadores = []
 
+        self.clear_files()
         self.create_widgets()
         self.load_coleadores()
+
+    def clear_files(self):
+        # Clear the content of the files at the start
+        files = ["coleadores.txt", "lista_posiciones.txt", "turno_actual.txt", "turno_siguiente.txt"]
+        for file in files:
+            open(file, 'w').close()
 
     def create_widgets(self):
         tk.Label(self.root, text="Nombre:").grid(row=0, column=0)
@@ -68,7 +78,8 @@ class App:
         self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5)
 
         tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4)
-        tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.add_to_turno_siguiente).grid(row=6, column=5)
+        tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.add_to_turno_siguiente).grid(row=6,
+                                                                                                         column=5)
         tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2)
 
     def start_drag(self, event):
@@ -109,7 +120,7 @@ class App:
         if not selected_index:
             messagebox.showwarning("Advertencia", "Seleccione un coleador para modificar")
             return
-        
+
         nombre = self.entry_nombre.get()
         estado = self.entry_estado.get()
         puntos_nulos = self.entry_puntos_nulos.get()
@@ -163,7 +174,7 @@ class App:
     def update_sorted_listbox(self):
         sorted_coleadores = sorted(self.lista_coleadores, key=lambda c: c.puntuacion(), reverse=True)
         self.listbox_sorted.delete(0, tk.END)
-        for coleador in sorted_coleadores:
+        for coleador in sorted_coleadores[:10]:  # Limit to top 10
             self.listbox_sorted.insert(tk.END, coleador.nombre)
         self.save_sorted_coleadores()
 
@@ -195,7 +206,9 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                self.listbox_turno_actual.insert(tk.END, coleador_nombre)
+                if coleador_nombre not in self.listbox_turno_actual.get(0, tk.END):
+                    self.listbox_turno_actual.insert(tk.END, coleador_nombre)
+                    self.save_turno_actual()
 
     def add_to_turno_siguiente(self):
         if self.listbox_turno_siguiente.size() < 4:
@@ -203,13 +216,28 @@ class App:
             if selected_index:
                 index = selected_index[0]
                 coleador_nombre = self.listbox.get(index)
-                self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
+                if coleador_nombre not in self.listbox_turno_siguiente.get(0, tk.END):
+                    self.listbox_turno_siguiente.insert(tk.END, coleador_nombre)
+                    self.save_turno_siguiente()
 
     def next_turn(self):
         self.listbox_turno_actual.delete(0, tk.END)
         for i in range(self.listbox_turno_siguiente.size()):
             self.listbox_turno_actual.insert(tk.END, self.listbox_turno_siguiente.get(i))
         self.listbox_turno_siguiente.delete(0, tk.END)
+        self.save_turno_actual()
+        self.save_turno_siguiente()
+
+    def save_turno_actual(self):
+        with open("turno_actual.txt", "w") as file:
+            for index in range(self.listbox_turno_actual.size()):
+                file.write(f"{self.listbox_turno_actual.get(index)}\n")
+
+    def save_turno_siguiente(self):
+        with open("turno_siguiente.txt", "w") as file:
+            for index in range(self.listbox_turno_siguiente.size()):
+                file.write(f"{self.listbox_turno_siguiente.get(index)}\n")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
