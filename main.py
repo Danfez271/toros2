@@ -140,6 +140,7 @@ class App:
             self.update_sorted_listbox()
             self.save_coleadores()
             self.save_coleador_to_file(coleador)
+            self.clear_entries()
         else:
             messagebox.showwarning("Advertencia", "Todos los campos son requeridos")
 
@@ -269,6 +270,12 @@ class App:
         with open("turno_siguiente.txt", "w") as file:
             for index in range(self.listbox_turno_siguiente.size()):
                 file.write(f"{self.listbox_turno_siguiente.get(index)}\n")
+
+    def clear_entries(self):
+        self.entry_nombre.delete(0, tk.END)
+        self.entry_estado.delete(0, tk.END)
+        self.entry_puntos_nulos.delete(0, tk.END)
+        self.entry_puntos_efectivos.delete(0, tk.END)
 
 
 if __name__ == "__main__":
