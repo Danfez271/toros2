@@ -44,24 +44,27 @@ class App:
             open(file, 'w').close()
 
     def create_widgets(self):
-        tk.Label(self.root, text="Nombre:").grid(row=0, column=0)
+        # Entry fields
+        tk.Label(self.root, text="Nombre:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
         self.entry_nombre = tk.Entry(self.root)
-        self.entry_nombre.grid(row=0, column=1)
+        self.entry_nombre.grid(row=0, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Estado:").grid(row=1, column=0)
+        tk.Label(self.root, text="Estado:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
         self.entry_estado = tk.Entry(self.root)
-        self.entry_estado.grid(row=1, column=1)
+        self.entry_estado.grid(row=1, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Puntos Nulos:").grid(row=2, column=0)
+        tk.Label(self.root, text="Puntos Nulos:").grid(row=2, column=0, padx=10, pady=5, sticky="e")
         self.entry_puntos_nulos = tk.Entry(self.root)
-        self.entry_puntos_nulos.grid(row=2, column=1)
+        self.entry_puntos_nulos.grid(row=2, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Puntos Efectivos:").grid(row=3, column=0)
+        tk.Label(self.root, text="Puntos Efectivos:").grid(row=3, column=0, padx=10, pady=5, sticky="e")
         self.entry_puntos_efectivos = tk.Entry(self.root)
-        self.entry_puntos_efectivos.grid(row=3, column=1)
+        self.entry_puntos_efectivos.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
+        # Listboxes
+        tk.Label(self.root, text="Todos los Coleadores").grid(row=0, column=2)
         self.listbox = tk.Listbox(self.root)
-        self.listbox.grid(row=0, column=2, rowspan=6)
+        self.listbox.grid(row=1, column=2, rowspan=5, padx=(20, 10), pady=10, sticky="ns")
         self.listbox.bind('<<ListboxSelect>>', self.on_listbox_select)
         self.listbox.bind('<Button-1>', self.start_drag)
         self.listbox.bind('<B1-Motion>', self.on_drag)
@@ -69,27 +72,32 @@ class App:
 
         self.drag_data = {"index": None}
 
+        tk.Label(self.root, text="Top 10").grid(row=0, column=3)
         self.listbox_sorted = tk.Listbox(self.root)
-        self.listbox_sorted.grid(row=0, column=3, rowspan=6)
+        self.listbox_sorted.grid(row=1, column=3, rowspan=5, padx=(10, 20), pady=10, sticky="ns")
 
-        tk.Button(self.root, text="Agregar", command=self.add_coleador).grid(row=4, column=0, columnspan=2)
-        tk.Button(self.root, text="Modificar", command=self.update_coleador).grid(row=5, column=0, columnspan=2)
-        tk.Button(self.root, text="Eliminar", command=self.delete_coleador).grid(row=6, column=0, columnspan=2)
+        # Buttons
+        tk.Button(self.root, text="Agregar", command=self.add_coleador).grid(row=4, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="Modificar", command=self.update_coleador, width=20).grid(row=5, column=0,
+                                                                                            columnspan=2, pady=10)
+        tk.Button(self.root, text="Eliminar", command=self.delete_coleador).grid(row=6, column=0, columnspan=2, pady=10)
 
         # Additions for Turno Actual and Turno Siguiente
-        tk.Label(self.root, text="Turno Actual:").grid(row=0, column=4)
+        tk.Label(self.root, text="Turno Actual:").grid(row=0, column=4, padx=10, pady=5)
         self.listbox_turno_actual = tk.Listbox(self.root)
-        self.listbox_turno_actual.grid(row=1, column=4, rowspan=5)
+        self.listbox_turno_actual.grid(row=1, column=4, rowspan=5, padx=10, pady=5, sticky="ns")
 
-        tk.Label(self.root, text="Turno Siguiente:").grid(row=0, column=5)
+        tk.Label(self.root, text="Turno Siguiente:").grid(row=0, column=5, padx=10, pady=5)
         self.listbox_turno_siguiente = tk.Listbox(self.root)
-        self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5)
+        self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5, padx=10, pady=5, sticky="ns")
 
-        tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4)
+        tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4,
+                                                                                                   pady=10)
         tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.add_to_turno_siguiente).grid(row=6,
-                                                                                                         column=5)
-        tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2)
-
+                                                                                                         column=5,
+                                                                                                         pady=10)
+        tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2,
+                                                                                  pady=10)
     def start_drag(self, event):
         widget = event.widget
         self.drag_data["index"] = widget.nearest(event.y)

@@ -6,7 +6,7 @@ import os
 class Coleador:
     def __init__(self, nombre, estado, puntos_nulos, puntos_efectivos):
         self.posicion = 0
-        self.nombre = nombre
+        self.nombre = self.formatear_nombre(nombre)
         self.estado = estado
         self.puntos_nulos = int(puntos_nulos)
         self.puntos_efectivos = int(puntos_efectivos)
@@ -16,6 +16,17 @@ class Coleador:
 
     def puntuacion(self):
         return self.puntos_efectivos - self.puntos_nulos
+
+    def formatear_nombre(self, nombre):
+        if len(nombre) > 15:
+            partes = nombre.split(' ')
+            if len(partes) > 1:
+                nombre_formateado = f"{partes[0]}, {partes[1][0]}"
+            else:
+                nombre_formateado = nombre
+        else:
+            nombre_formateado = nombre
+        return nombre_formateado
 
 
 class App:
@@ -36,24 +47,27 @@ class App:
             open(file, 'w').close()
 
     def create_widgets(self):
-        tk.Label(self.root, text="Nombre:").grid(row=0, column=0)
+        # Entry fields
+        tk.Label(self.root, text="Nombre:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
         self.entry_nombre = tk.Entry(self.root)
-        self.entry_nombre.grid(row=0, column=1)
+        self.entry_nombre.grid(row=0, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Estado:").grid(row=1, column=0)
+        tk.Label(self.root, text="Estado:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
         self.entry_estado = tk.Entry(self.root)
-        self.entry_estado.grid(row=1, column=1)
+        self.entry_estado.grid(row=1, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Puntos Nulos:").grid(row=2, column=0)
+        tk.Label(self.root, text="Puntos Nulos:").grid(row=2, column=0, padx=10, pady=5, sticky="e")
         self.entry_puntos_nulos = tk.Entry(self.root)
-        self.entry_puntos_nulos.grid(row=2, column=1)
+        self.entry_puntos_nulos.grid(row=2, column=1, padx=10, pady=5, sticky="w")
 
-        tk.Label(self.root, text="Puntos Efectivos:").grid(row=3, column=0)
+        tk.Label(self.root, text="Puntos Efectivos:").grid(row=3, column=0, padx=10, pady=5, sticky="e")
         self.entry_puntos_efectivos = tk.Entry(self.root)
-        self.entry_puntos_efectivos.grid(row=3, column=1)
+        self.entry_puntos_efectivos.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
+        # Listboxes
+        tk.Label(self.root, text="Todos los Coleadores").grid(row=0, column=2)
         self.listbox = tk.Listbox(self.root)
-        self.listbox.grid(row=0, column=2, rowspan=6)
+        self.listbox.grid(row=1, column=2, rowspan=5, padx=(20, 10), pady=10, sticky="ns")
         self.listbox.bind('<<ListboxSelect>>', self.on_listbox_select)
         self.listbox.bind('<Button-1>', self.start_drag)
         self.listbox.bind('<B1-Motion>', self.on_drag)
@@ -61,26 +75,32 @@ class App:
 
         self.drag_data = {"index": None}
 
+        tk.Label(self.root, text="Top 10").grid(row=0, column=3)
         self.listbox_sorted = tk.Listbox(self.root)
-        self.listbox_sorted.grid(row=0, column=3, rowspan=6)
+        self.listbox_sorted.grid(row=0, column=3, rowspan=6, padx=(10, 20), pady=10, sticky="ns")
 
-        tk.Button(self.root, text="Agregar", command=self.add_coleador).grid(row=4, column=0, columnspan=2)
-        tk.Button(self.root, text="Modificar", command=self.update_coleador).grid(row=5, column=0, columnspan=2)
-        tk.Button(self.root, text="Eliminar", command=self.delete_coleador).grid(row=6, column=0, columnspan=2)
+        # Buttons
+        tk.Button(self.root, text="Agregar", command=self.add_coleador).grid(row=4, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="Modificar", command=self.update_coleador, width=20).grid(row=5, column=0,
+                                                                                            columnspan=2, pady=10)
+        tk.Button(self.root, text="Eliminar", command=self.delete_coleador).grid(row=6, column=0, columnspan=2, pady=10)
 
         # Additions for Turno Actual and Turno Siguiente
-        tk.Label(self.root, text="Turno Actual:").grid(row=0, column=4)
+        tk.Label(self.root, text="Turno Actual:").grid(row=0, column=4, padx=10, pady=5)
         self.listbox_turno_actual = tk.Listbox(self.root)
-        self.listbox_turno_actual.grid(row=1, column=4, rowspan=5)
+        self.listbox_turno_actual.grid(row=1, column=4, rowspan=5, padx=10, pady=5, sticky="ns")
 
-        tk.Label(self.root, text="Turno Siguiente:").grid(row=0, column=5)
+        tk.Label(self.root, text="Turno Siguiente:").grid(row=0, column=5, padx=10, pady=5)
         self.listbox_turno_siguiente = tk.Listbox(self.root)
-        self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5)
+        self.listbox_turno_siguiente.grid(row=1, column=5, rowspan=5, padx=10, pady=5, sticky="ns")
 
-        tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4)
+        tk.Button(self.root, text="Agregar a Turno Actual", command=self.add_to_turno_actual).grid(row=6, column=4,
+                                                                                                   pady=10)
         tk.Button(self.root, text="Agregar a Turno Siguiente", command=self.add_to_turno_siguiente).grid(row=6,
-                                                                                                         column=5)
-        tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2)
+                                                                                                         column=5,
+                                                                                                         pady=10)
+        tk.Button(self.root, text="Siguiente Turno", command=self.next_turn).grid(row=7, column=4, columnspan=2,
+                                                                                  pady=10)
 
     def start_drag(self, event):
         widget = event.widget
@@ -112,6 +132,7 @@ class App:
             self.update_listbox()
             self.update_sorted_listbox()
             self.save_coleadores()
+            self.save_coleador_to_file(coleador)
         else:
             messagebox.showwarning("Advertencia", "Todos los campos son requeridos")
 
@@ -129,7 +150,7 @@ class App:
         if nombre and estado and puntos_nulos and puntos_efectivos:
             index = selected_index[0]
             coleador = self.lista_coleadores[index]
-            coleador.nombre = nombre
+            coleador.nombre = coleador.formatear_nombre(nombre)
             coleador.estado = estado
             coleador.puntos_nulos = int(puntos_nulos)
             coleador.puntos_efectivos = int(puntos_efectivos)
@@ -169,16 +190,15 @@ class App:
         self.listbox.delete(0, tk.END)
         for coleador in self.lista_coleadores:
             self.listbox.insert(tk.END, coleador.nombre)
-        self.save_coleadores()
 
     def update_sorted_listbox(self):
-        sorted_coleadores = sorted(self.lista_coleadores, key=lambda c: c.puntuacion(), reverse=True)
+        sorted_coleadores = sorted(self.lista_coleadores, key=lambda x: x.puntuacion(), reverse=True)
         self.listbox_sorted.delete(0, tk.END)
-        for coleador in sorted_coleadores[:10]:  # Limit to top 10
+        for coleador in sorted_coleadores[:10]:
             self.listbox_sorted.insert(tk.END, coleador.nombre)
-        self.save_sorted_coleadores()
+        self.save_sorted_list()
 
-    def save_sorted_coleadores(self):
+    def save_sorted_list(self):
         with open("lista_posiciones.txt", "w") as file:
             for index in range(self.listbox_sorted.size()):
                 file.write(f"{self.listbox_sorted.get(index)}\n")
@@ -187,6 +207,13 @@ class App:
         with open("coleadores.txt", "w") as file:
             for coleador in self.lista_coleadores:
                 file.write(f"{coleador.nombre},{coleador.estado},{coleador.puntos_nulos},{coleador.puntos_efectivos}\n")
+
+    def save_coleador_to_file(self, coleador):
+        file_index = (len(self.lista_coleadores) - 1) // 10 + 1
+        file_name = f"coleadores{file_index}.txt"
+        mode = 'a' if os.path.exists(file_name) and (len(self.lista_coleadores) - 1) % 10 != 0 else 'w'
+        with open(file_name, mode) as file:
+            file.write(f"{coleador.nombre},{coleador.estado},{coleador.puntos_nulos},{coleador.puntos_efectivos}\n")
 
     def load_coleadores(self):
         try:
