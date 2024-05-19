@@ -217,8 +217,8 @@ class App:
     def save_efectivos_and_nulos(self, sorted_coleadores):
         with open("efectivos.txt", "w") as file_efectivos, open("nulos.txt", "w") as file_nulos:
             for coleador in sorted_coleadores:
-                file_efectivos.write(f"{coleador.nombre}: {coleador.puntos_efectivos}\n")
-                file_nulos.write(f"{coleador.nombre}: {coleador.puntos_nulos}\n")
+                file_efectivos.write(f"{coleador.puntos_efectivos}\n")
+                file_nulos.write(f"{coleador.puntos_nulos}\n")
 
     def save_coleadores(self):
         with open("participantes.txt", "w") as file:
