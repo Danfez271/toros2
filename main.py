@@ -44,13 +44,13 @@ class App:
         # Clear the content of the files at the start
         files = [
             "participantes.txt",
-            "lista_posiciones.txt",
-            "turno_actual.txt",
-            "turno_siguiente.txt",
-            "coleadores1.txt",
-            "coleadores2.txt",
-            "efectivos.txt",
-            "nulos.txt"
+            "turnos/turno_actual.txt",
+            "turnos/turno_siguiente.txt",
+            "coleadores/coleadores1.txt",
+            "coleadores/coleadores2.txt",
+            "top_10/lista_posiciones.txt",
+            "top_10/efectivos.txt",
+            "top_10/nulos.txt"
         ]
         for file in files:
             open(file, 'w').close()
@@ -210,12 +210,12 @@ class App:
         self.save_efectivos_and_nulos(sorted_coleadores[:10])
 
     def save_sorted_list(self):
-        with open("lista_posiciones.txt", "w") as file:
+        with open("top_10/lista_posiciones.txt", "w") as file:
             for index in range(self.listbox_sorted.size()):
                 file.write(f"{self.listbox_sorted.get(index)}\n")
 
     def save_efectivos_and_nulos(self, sorted_coleadores):
-        with open("efectivos.txt", "w") as file_efectivos, open("nulos.txt", "w") as file_nulos:
+        with open("top_10/efectivos.txt", "w") as file_efectivos, open("top_10/nulos.txt", "w") as file_nulos:
             for coleador in sorted_coleadores:
                 file_efectivos.write(f"{coleador.puntos_efectivos}\n")
                 file_nulos.write(f"{coleador.puntos_nulos}\n")
@@ -227,7 +227,7 @@ class App:
 
     def save_coleador_to_file(self, coleador):
         file_index = (len(self.lista_coleadores) - 1) // 10 + 1
-        file_name = f"coleadores{file_index}.txt"
+        file_name = f"coleadores/coleadores{file_index}.txt"
         mode = 'a' if os.path.exists(file_name) and (len(self.lista_coleadores) - 1) % 10 != 0 else 'w'
         with open(file_name, mode) as file:
             file.write(f"{coleador.nombre},{coleador.estado},{coleador.puntos_nulos},{coleador.puntos_efectivos}\n")
@@ -271,12 +271,12 @@ class App:
         self.save_turno_siguiente()
 
     def save_turno_actual(self):
-        with open("turno_actual.txt", "w") as file:
+        with open("turnos/turno_actual.txt", "w") as file:
             for index in range(self.listbox_turno_actual.size()):
                 file.write(f"{self.listbox_turno_actual.get(index)}\n")
 
     def save_turno_siguiente(self):
-        with open("turno_siguiente.txt", "w") as file:
+        with open("turnos/turno_siguiente.txt", "w") as file:
             for index in range(self.listbox_turno_siguiente.size()):
                 file.write(f"{self.listbox_turno_siguiente.get(index)}\n")
 
